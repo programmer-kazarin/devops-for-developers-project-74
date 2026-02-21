@@ -9,3 +9,14 @@ rm -rf app/.git
 docker run -u $(id -u) -it -w /out -v `pwd`/app:/out node:20.12.2 make setup
 docker run -u $(id -u) -it -w /out -v `pwd`/app:/out -p 8080:8080 node:20.12.2 make dev
 ```
+
+# Step 2
+``` bash
+vim .dockerignore
+vim Dockerfile
+docker-compose run --rm app make setup
+docker-compose up --abort-on-container-exit
+docker-compose up
+docker-compose -f docker-compose.yml up --abort-on-container-exit --exit-code-from app
+vim Makefile
+```

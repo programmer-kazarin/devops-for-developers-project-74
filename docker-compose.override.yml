@@ -4,7 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command:
+    command: make dev
     volumes:
       - "./app:/app"
-
+    ports:
+      - "8080:8080"
+  
