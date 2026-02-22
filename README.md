@@ -20,3 +20,17 @@ docker-compose up
 docker-compose -f docker-compose.yml up --abort-on-container-exit --exit-code-from app
 vim Makefile
 ```
+
+# Step 3
+``` bash
+docker login
+cp Dockerfile Dockerfile.production
+vim Dockerfile.production
+vim docker-compose.override.yml
+vim docker-compose.yml
+docker-compose -f docker-compose.yml up --abort-on-container-exit
+vim docker-compose.yml
+docker-compose -f docker-compose.yml build app
+docker-compose -f docker-compose.yml push app
+docker run -p 8080:8080 -e NODE_ENV=development kazarin/devops-for-developers-project-74 make dev
+```

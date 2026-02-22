@@ -1,10 +1,7 @@
 version: "3"
 services:
   app:
+    image: kazarin/devops-for-developers-project-74
     build:
       context: .
-      dockerfile: Dockerfile
-    command:
-    volumes:
-      - "./app:/app"
-
+      dockerfile: Dockerfile.production
