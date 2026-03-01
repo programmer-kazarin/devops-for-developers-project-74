@@ -34,3 +34,11 @@ docker-compose -f docker-compose.yml build app
 docker-compose -f docker-compose.yml push app
 docker run -p 8080:8080 -e NODE_ENV=development kazarin/devops-for-developers-project-74 make dev
 ```
+
+# Step 4
+``` bash
+vim .github/workflows/push.yml
+vim Makefile
+```
+Dockerhub --> Personal access tokens --> New access token
+Github --> Settings --> Secrets and variables --> Actions --> New repository secrets (DOCKERHUB_USERNAME, DOCKERHUB_TOKEN)
