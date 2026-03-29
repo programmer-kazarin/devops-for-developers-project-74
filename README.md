@@ -42,3 +42,10 @@ vim Makefile
 ```
 Dockerhub --> Personal access tokens --> New access token
 Github --> Settings --> Secrets and variables --> Actions --> New repository secrets (DOCKERHUB_USERNAME, DOCKERHUB_TOKEN)
+
+# Step 5
+``` bash
+vim services/caddy/Caddyfile
+vim docker-compose.override.yml
+docker-compose up
+```
