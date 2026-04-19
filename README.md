@@ -1,61 +1,72 @@
-### Hexlet tests and linter status:
-[![Actions Status](https://github.com/programmer-kazarin/devops-for-developers-project-74/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/programmer-kazarin/devops-for-developers-project-74/actions)
+# DevOps for developers — проект
 
-# Step1
-``` bash
-touch docker-compose.yml
-git clone git@github.com:hexlet-components/js-fastify-blog.git app
-rm -rf app/.git
-docker run -u $(id -u) -it -w /out -v `pwd`/app:/out node:20.12.2 make setup
-docker run -u $(id -u) -it -w /out -v `pwd`/app:/out -p 8080:8080 node:20.12.2 make dev
+## Статус CI
+
+[![build-and-test](https://github.com/programmer-kazarin/devops-for-developers-project-74/actions/workflows/push.yml/badge.svg)](https://github.com/programmer-kazarin/devops-for-developers-project-74/actions/workflows/push.yml)
+
+[![Hexlet check](https://github.com/programmer-kazarin/devops-for-developers-project-74/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/programmer-kazarin/devops-for-developers-project-74/actions)
+
+## Системные требования
+
+- [Docker](https://docs.docker.com/get-docker/) и Docker Compose (plugin `docker compose` v2)
+- ОС: Linux, macOS или Windows с WSL2 (рекомендуется для согласованности путей и прав)
+
+## Образ на Docker Hub
+
+Сборка и публикация выполняются в GitHub Actions в job `build-and-test` (секреты `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`).
+
+- Пример страницы образа (логин совпадает с владельцем репозитория на GitHub): [hub.docker.com/r/programmer-kazarin/devops-for-developers-project-74](https://hub.docker.com/r/programmer-kazarin/devops-for-developers-project-74)
+
+В `docker-compose.yml` в поле `image` указано имя `kazarin/devops-for-developers-project-74` — при необходимости замените на свой `<username>/devops-for-developers-project-74`, совпадающий с публикацией из CI.
+
+## Подготовка и запуск (локальная разработка)
+
+1. Скопируйте переменные окружения (в корне репозитория):
+
+   ```bash
+   cp app/.env.example .env
+   ```
+
+2. Подготовьте зависимости и миграции внутри контейнера приложения:
+
+   ```bash
+   make setup
+   ```
+
+3. Запустите стек (приложение, при необходимости Caddy из `docker-compose.override.yml`):
+
+   ```bash
+   make dev
+   ```
+
+Приложение в режиме разработки доступно на порту **8080** (см. `docker-compose.override.yml`).
+
+## Тесты и линтер
+
+Запуск тестов в том же окружении, что и в CI (только `docker-compose.yml`, без override). Перед запуском образ `app` пересобирается из `Dockerfile.production` (`--build`), чтобы не использовать устаревший образ с Docker Hub.
+
+```bash
+make test
 ```
 
-# Step 2
-``` bash
-vim .dockerignore
-vim Dockerfile
-docker-compose run --rm app make setup
-docker-compose up --abort-on-container-exit
-docker-compose up
-docker-compose -f docker-compose.yml up --abort-on-container-exit --exit-code-from app
-vim Makefile
+Линтер:
+
+```bash
+make lint
 ```
 
-# Step 3
-``` bash
-docker login
-cp Dockerfile Dockerfile.production
-vim Dockerfile.production
-vim docker-compose.override.yml
-vim docker-compose.yml
-docker-compose -f docker-compose.yml up --abort-on-container-exit
-vim docker-compose.yml
-docker-compose -f docker-compose.yml build app
-docker-compose -f docker-compose.yml push app
-docker run -p 8080:8080 -e NODE_ENV=development kazarin/devops-for-developers-project-74 make dev
+Линтер и тесты подряд (как в CI):
+
+```bash
+make ci
 ```
 
-# Step 4
-``` bash
-vim .github/workflows/push.yml
-vim Makefile
-```
-Dockerhub --> Personal access tokens --> New access token
-Github --> Settings --> Secrets and variables --> Actions --> New repository secrets (DOCKERHUB_USERNAME, DOCKERHUB_TOKEN)
+## Команды Makefile
 
-# Step 5
-``` bash
-vim services/caddy/Caddyfile
-vim docker-compose.override.yml
-docker-compose up
-```
-
-# Step 6
-``` bash
-vim app/config/config.cjs
-vim docker-compose.yml
-vim docker-compose.override.yml
-vim app/.env.example
-vim .gitignore
-docker-compose up
-```
+| Цель   | Назначение |
+|--------|------------|
+| `make setup` | Первичная подготовка: `make setup` внутри сервиса `app` (compose с override) |
+| `make dev`   | Запуск `docker compose up` |
+| `make test`  | Тесты в контейнере `app` |
+| `make lint`  | ESLint в контейнере `app` |
+| `make ci`    | Линтер и тесты в контейнере (как в GitHub Actions) |

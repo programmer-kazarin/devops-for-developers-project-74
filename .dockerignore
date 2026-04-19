@@ -1,1 +1,10 @@
-./app/node_modules
+.git
+.github
+.env
+.env.*
+**/.env
+**/.env.*
+*.md
+docker-compose*.yml
+Makefile
+app/node_modules

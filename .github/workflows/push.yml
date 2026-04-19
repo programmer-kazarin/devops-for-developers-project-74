@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run tests
+      - name: Run lint and tests
         run: make ci
 
       - name: Set up Docker Buildx
