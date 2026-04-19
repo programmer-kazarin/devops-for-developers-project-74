@@ -49,3 +49,13 @@ vim services/caddy/Caddyfile
 vim docker-compose.override.yml
 docker-compose up
 ```
+
+# Step 6
+``` bash
+vim app/config/config.cjs
+vim docker-compose.yml
+vim docker-compose.override.yml
+vim app/.env.example
+vim .gitignore
+docker-compose up
+```

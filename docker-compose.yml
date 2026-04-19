@@ -1,7 +1,20 @@
-version: "3"
 services:
   app:
     image: kazarin/devops-for-developers-project-74
     build:
       context: .
       dockerfile: Dockerfile.production
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
